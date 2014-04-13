@@ -20,11 +20,10 @@ static const double PI = acos(-1.0);
 
 enum{
     NHAR=6,
-    NCENT=10,
+    NCENT=1,
     NSTEP=50,
     ETOT=6,
 };
-
 
 void glauberCut(int from=0, int to=100){
 
@@ -32,7 +31,7 @@ void glauberCut(int from=0, int to=100){
 
     TChain* t = new TChain("t");
     char dfilelist[100];
-    sprintf(dfilelist,"outlist.txt");
+    sprintf(dfilelist,"filelist.txt");
     ifstream lis(dfilelist);
     int cnt=0;
     int dnt=0;
@@ -107,7 +106,7 @@ void glauberCut(int from=0, int to=100){
     for(int iev=0; iev<nevents; iev++){
         t->GetEntry(iev);
         if(iev%1000000==0) cout<<iev<<endl;
-        if(Centbin<0||Centbin>=10) continue;
+        if(Centbin!=0) continue;
         hcent[Centbin] ->Fill(Centbin);
         for(int ihar=0; ihar<NHAR; ihar++){
             hecc[Centbin][ihar] ->Fill(pre_gl[ihar]);
@@ -140,7 +139,7 @@ void glauberCut(int from=0, int to=100){
     }
 
     ofstream tout;
-    sprintf(name,"ECut_full.txt");
+    sprintf(name,"ECut_cent0.txt");
     tout.open(name);
     for(int cent=0; cent<NCENT; cent++){
 
@@ -153,11 +152,11 @@ void glauberCut(int from=0, int to=100){
         }
     }
     }
-    
+
 
     tout.close();
 
-    TFile* fout = new TFile("glauber_cut.root","recreate");
+    TFile* fout = new TFile("glauber_cut_cent0.root","recreate");
     for(int icent=0; icent<NCENT; icent++){
         for(int ihar=0; ihar<NHAR; ihar++){
             hecc[icent][ihar] ->Write();
@@ -167,5 +166,4 @@ void glauberCut(int from=0, int to=100){
         hcent[icent] ->Write();
     }
     fout->Close();
-
 }

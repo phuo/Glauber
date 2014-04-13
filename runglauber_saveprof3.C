@@ -54,8 +54,7 @@ float bcent[21];
 float bave[21];
 int   centmode;
 int   collmode;
-    int
-getCentBin(double b)
+int getCentBin(double b)
 {
 
     for(int i=0; i<20; i++)
@@ -66,8 +65,7 @@ getCentBin(double b)
 
 }
 
-    void
-GetCentrality()
+void GetCentrality()
 {
     if(collmode==0){
         //Pb+Pb
@@ -527,7 +525,7 @@ class TGlauberMC : public TNamed
 
         Double_t     fang;           // rotate angle;
 
-       
+
         //R. Wei: following needed to simulate the BBC response
         TRanNBD nbd;
         double alpha;
@@ -546,13 +544,13 @@ class TGlauberMC : public TNamed
 
         double pfAngGl[ETOT],pfeGl[ETOT];
         double pfrAngGl[ETOT],pfreGl[ETOT];
-//        std::vector<float> nux;
-//        std::vector<float> nuy;
-//        std::vector<int> st_part;
+        //        std::vector<float> nux;
+        //        std::vector<float> nuy;
+        //        std::vector<int> st_part;
 
-       float nux[500];
-       float nuy[500];
-       int st_part[500];
+        float nux[500];
+        float nuy[500];
+        int st_part[500];
 
 
         TGlauberMC(Text_t* NA = "Au", Text_t* NB = "Au", Double_t xsect = 42);
@@ -582,11 +580,11 @@ class TGlauberMC : public TNamed
         void         SetNBDMode(int mode)      {fnbdmode = mode;}
         void         SetMu(double mu)          {fmu = mu;}
         void         SetK(double k)            {fk = k;}
-//P.huo
+        //P.huo
 
-  //      vector<float>    GetNux()         const {return nux;}
-  //      vector<float>    GetNuy()         const {return nuy;}
-  //      vector<float>    GetSt_part()     const {return st_part;}
+        //      vector<float>    GetNux()         const {return nux;}
+        //      vector<float>    GetNuy()         const {return nuy;}
+        //      vector<float>    GetSt_part()     const {return st_part;}
 
         double GetAng()         {return fang;}     //clockwise is positive;
         double GetSDEccen()     {return fSDeccen;} //standard eccentricty, such as the one used in PHENIX.
@@ -780,24 +778,24 @@ void runAndSaveNucleonsProf(Int_t n,
 
     TTree* t = new TTree("t","event tree");
 
-//    t->Branch("seed",        &seed,     "seed/I");
+    //    t->Branch("seed",        &seed,     "seed/I");
     t->Branch("b",            &b,       "b/D");
     t->Branch("Centbin",   &Centbin, "Centbin/I");
     t->Branch("ncoll",        &ncoll,    "ncoll/I");
     t->Branch("npart",        &npart,    "npart/I");
     t->Branch("npartproj",    &npartproj,"npartproj/I");
     t->Branch("nparttarg",    &nparttarg,"nparttarg/I");
- //   t->Branch("ecc_std",      &ecc_std,  "ecc_std/D");
-//    t->Branch("ecc_rp",       &ecc_rp,   "ecc_rp/D");
+    //   t->Branch("ecc_std",      &ecc_std,  "ecc_std/D");
+    //    t->Branch("ecc_rp",       &ecc_rp,   "ecc_rp/D");
     t->Branch("ecc_part",     &ecc_part, "ecc_part/D");
 
-  //  t->Branch("e_gl",         &mcg->feGl,  "e_gl[6]/D");
-  //  t->Branch("ang_gl",       &mcg->fAngGl,"ang_gl[6]/D");
-//    t->Branch("re_gl",         &mcg->freGl,  "re_gl[6]/D");
- //   t->Branch("rang_gl",       &mcg->frAngGl,"rang_gl[6]/D");
+    //  t->Branch("e_gl",         &mcg->feGl,  "e_gl[6]/D");
+    //  t->Branch("ang_gl",       &mcg->fAngGl,"ang_gl[6]/D");
+    //    t->Branch("re_gl",         &mcg->freGl,  "re_gl[6]/D");
+    //   t->Branch("rang_gl",       &mcg->frAngGl,"rang_gl[6]/D");
 
- //   t->Branch("pe_gl",         &mcg->pfeGl,  "pe_gl[6]/D");
- //   t->Branch("pang_gl",       &mcg->pfAngGl,"pang_gl[6]/D");
+    //   t->Branch("pe_gl",         &mcg->pfeGl,  "pe_gl[6]/D");
+    //   t->Branch("pang_gl",       &mcg->pfAngGl,"pang_gl[6]/D");
     t->Branch("pre_gl",        &mcg->pfreGl,  "pre_gl[6]/D");
     t->Branch("prang_gl",      &mcg->pfrAngGl,"prang_gl[6]/D");
 
@@ -882,35 +880,35 @@ void runAndSaveNucleonsProf(Int_t n,
         hNpart->Fill(npart);
         hNcoll->Fill(ncoll);
         himp[centbin]->Fill(b);
-/*
-        for(int i=0; i<nucleons->GetSize(); i++){
-            TGlauNucleon* tgn = (TGlauNucleon*)nucleons->At(i);
-            if(tgn->IsSpectator()) continue;
-            double x = tgn->GetX();
-            double y = tgn->GetY();
+        /*
+           for(int i=0; i<nucleons->GetSize(); i++){
+           TGlauNucleon* tgn = (TGlauNucleon*)nucleons->At(i);
+           if(tgn->IsSpectator()) continue;
+           double x = tgn->GetX();
+           double y = tgn->GetY();
 
-            hpartXY[centbin]->Fill(x,y);
-            vector<double> cx = tgn->GetcX();
-            vector<double> cy = tgn->GetcY();
-            vector<double> dij = tgn->Getdij();
-            int sizex = (int) cx.size();
-            int sizey = (int) cy.size();
-            int sizen = tgn->GetNColl();
-            if(sizex!=sizey) cerr << " sizex not equal sizey" << endl;
-            if(sizex!=sizen) cerr << " sizex not equal ncoll: " << sizex << " " << ncoll << endl;
-            for(int is=0; is<sizen; is++) {
-                hcollXY[centbin]->Fill(cx[is],cy[is],0.5);
-                hcollDIJ[centbin]->Fill(dij[is],0.5);
-            }
-        }
-        */
+           hpartXY[centbin]->Fill(x,y);
+           vector<double> cx = tgn->GetcX();
+           vector<double> cy = tgn->GetcY();
+           vector<double> dij = tgn->Getdij();
+           int sizex = (int) cx.size();
+           int sizey = (int) cy.size();
+           int sizen = tgn->GetNColl();
+           if(sizex!=sizey) cerr << " sizex not equal sizey" << endl;
+           if(sizex!=sizen) cerr << " sizex not equal ncoll: " << sizex << " " << ncoll << endl;
+           for(int is=0; is<sizen; is++) {
+           hcollXY[centbin]->Fill(cx[is],cy[is],0.5);
+           hcollDIJ[centbin]->Fill(dij[is],0.5);
+           }
+           }
+           */
     }
-   /* for(int icent=0; icent<20; icent++)
-    {
-        hcollXY[icent]->Scale(1.0/neve[icent]*100);
-        hpartXY[icent]->Scale(1.0/neve[icent]*100);
-    }
-    */
+    /* for(int icent=0; icent<20; icent++)
+       {
+       hcollXY[icent]->Scale(1.0/neve[icent]*100);
+       hpartXY[icent]->Scale(1.0/neve[icent]*100);
+       }
+       */
     //cout<<hImpactAll->Integral()<<endl;
     out->cd();
     t->Write();
